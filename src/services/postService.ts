@@ -43,8 +43,8 @@ class PostService {
     if (postData.description) formData.append('description', postData.description);
     formData.append('isPublic', postData.isPublic.toString());
     
-    postData.mediaFiles.forEach((file, index) => {
-      formData.append(`media[${index}]`, file);
+    postData.mediaFiles.forEach((file) => {
+      formData.append('media', file);
     });
     
     const response = await apiClient.uploadFiles<ApiResponse<Post>>('/posts', formData);

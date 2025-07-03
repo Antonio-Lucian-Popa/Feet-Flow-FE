@@ -15,9 +15,6 @@ class ApiClient {
     this.client = axios.create({
       baseURL: BASE_URL,
       timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     this.setupInterceptors();
@@ -145,11 +142,7 @@ class ApiClient {
 
   // Special method for file uploads
   async uploadFiles<T>(url: string, formData: FormData): Promise<T> {
-    const response: AxiosResponse<T> = await this.client.post(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response: AxiosResponse<T> = await this.client.post(url, formData);
     return response.data;
   }
 }
