@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
@@ -42,8 +43,26 @@ class ApiClient {
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {
+          const accessToken = localStorage.getItem('accessToken');
+          const refreshToken = localStorage.getItem('refreshToken');
+
+          // 🛡️ Verificăm dacă access token-ul este expirat
+          const isTokenExpired = (() => {
+            if (!accessToken) return true;
+            try {
+              const { exp } = jwtDecode<{ exp: number }>(accessToken);
+              return Date.now() >= exp * 1000;
+            } catch {
+              return true;
+            }
+          })();
+
+          if (!isTokenExpired) {
+            // Tokenul nu e expirat, deci e un 401 "legitim" (e.g. lipsă permisiuni)
+            return Promise.reject(error);
+          }
+
           if (this.isRefreshing) {
-            // If we're already refreshing, queue this request
             return new Promise((resolve, reject) => {
               this.failedQueue.push({ resolve, reject });
             }).then((token) => {
@@ -58,22 +77,15 @@ class ApiClient {
           this.isRefreshing = true;
 
           try {
-            const refreshToken = localStorage.getItem('refreshToken');
-            if (!refreshToken) {
-              throw new Error('No refresh token available');
-            }
+            if (!refreshToken) throw new Error('No refresh token available');
 
-            const response = await this.client.post('/auth/refresh', {
-              refreshToken,
-            });
+            const response = await this.client.post('/auth/refresh', { refreshToken });
+            const { accessToken: newAccessToken } = response.data;
 
-            const { accessToken } = response.data;
-            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('accessToken', newAccessToken);
+            this.processQueue(null, newAccessToken);
 
-            // Process the failed queue
-            this.processQueue(null, accessToken);
-
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return this.client(originalRequest);
           } catch (refreshError) {
             this.processQueue(refreshError, null);
@@ -84,7 +96,6 @@ class ApiClient {
             this.isRefreshing = false;
           }
         }
-
         return Promise.reject(error);
       }
     );
