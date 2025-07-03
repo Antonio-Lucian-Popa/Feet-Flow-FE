@@ -20,7 +20,7 @@ const registerSchema = z.object({
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
-    role: z.enum(['user', 'creator']),
+    role: z.enum(['USER', 'CREATOR']),
     agreeToTerms: z.boolean().refine(val => val === true, 'You must agree to the terms'),
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -46,7 +46,7 @@ export const RegisterForm: React.FC = () => {
     } = useForm<RegisterFormData>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            role: 'user',
+            role: 'USER',
             agreeToTerms: false,
         },
     });
@@ -198,14 +198,14 @@ export const RegisterForm: React.FC = () => {
                                         className="grid grid-cols-2 gap-4"
                                     >
                                         <div className="flex items-center space-x-2 bg-gray-800 p-3 rounded-lg border border-gray-700">
-                                            <RadioGroupItem value="user" id="user" className="data-[state=checked]:bg-red-600 data-[state=checked]:text-white"/>
+                                            <RadioGroupItem value="USER" id="user" className="data-[state=checked]:bg-red-600 data-[state=checked]:text-white" />
                                             <Label htmlFor="user" className="flex items-center space-x-2 text-gray-300 cursor-pointer">
                                                 <User className="h-4 w-4" />
                                                 <span>Fan</span>
                                             </Label>
                                         </div>
                                         <div className="flex items-center space-x-2 bg-gray-800 p-3 rounded-lg border border-gray-700">
-                                            <RadioGroupItem value="creator" id="creator" className="data-[state=checked]:bg-red-600 data-[state=checked]:text-white" />
+                                            <RadioGroupItem value="CREATOR" id="creator" className="data-[state=checked]:bg-red-600 data-[state=checked]:text-white" />
                                             <Label htmlFor="creator" className="flex items-center space-x-2 text-gray-300 cursor-pointer">
                                                 <Crown className="h-4 w-4" />
                                                 <span>Creator</span>
@@ -215,7 +215,7 @@ export const RegisterForm: React.FC = () => {
                                 )}
                             />
 
-                            {selectedRole === 'creator' && (
+                            {selectedRole === 'CREATOR' && (
                                 <p className="text-sm text-gray-400 bg-gray-800 p-2 rounded">
                                     As a creator, you'll be able to upload content and earn from subscriptions.
                                 </p>
@@ -223,11 +223,19 @@ export const RegisterForm: React.FC = () => {
                         </div>
 
                         <div className="flex items-center space-x-2">
-                            <Checkbox
-                                id="agreeToTerms"
-                                {...register('agreeToTerms')}
-                                className="border-gray-600 data-[state=checked]:bg-red-600"
+                            <Controller
+                                name="agreeToTerms"
+                                control={control}
+                                render={({ field }) => (
+                                    <Checkbox
+                                        id="agreeToTerms"
+                                        checked={field.value}
+                                        onCheckedChange={(checked) => field.onChange(!!checked)}
+                                        className="border-gray-600 data-[state=checked]:bg-red-600"
+                                    />
+                                )}
                             />
+
                             <Label htmlFor="agreeToTerms" className="text-sm text-gray-300">
                                 I agree to the{' '}
                                 <Link to="/terms" className="text-red-500 hover:text-red-400">

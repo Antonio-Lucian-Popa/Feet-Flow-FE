@@ -46,23 +46,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      await authService.login({ email, password });
-      const currentUser = await authService.getCurrentUser();
-      setUser(currentUser);
-      setIsAuthenticated(true);
-    } catch (error) {
-      throw error;
-    }
+    await authService.login({ email, password });
+    const currentUser = await authService.getCurrentUser();
+    setUser(currentUser);
+    setIsAuthenticated(true);
   };
 
   const register = async (userData: any) => {
-    try {
-      await authService.register(userData);
-      // After registration, user needs to login
-    } catch (error) {
-      throw error;
-    }
+    await authService.register(userData);
+    // After registration, user needs to login
   };
 
   const logout = () => {
