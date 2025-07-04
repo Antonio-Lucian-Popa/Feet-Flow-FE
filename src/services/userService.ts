@@ -45,6 +45,30 @@ class UserService {
     throw new Error(response.message || 'Failed to upload profile picture');
   }
 
+  async uploadCoverImage(file: File): Promise<User> {
+    const formData = new FormData();
+    formData.append('coverImage', file);
+    
+    const response = await apiClient.uploadFiles<ApiResponse<User>>('/users/profile/cover', formData);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to upload cover image');
+  }
+
+   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    const response = await apiClient.post<ApiResponse<void>>('/users/change-password', {
+      currentPassword,
+      newPassword,
+    });
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to change password');
+    }
+  }
+
   async getCreators(page = 0, size = 20): Promise<PaginatedResponse<User>> {
     const response = await apiClient.get<ApiResponse<PaginatedResponse<User>>>(
       `/users/creators?page=${page}&size=${size}`

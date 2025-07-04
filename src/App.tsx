@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { Layout } from './components/Layout/Layout';
@@ -14,6 +13,7 @@ import { PostDetailPage } from './pages/PostDetailPage';
 import { Toaster } from '@/components/ui/sonner';
 import './App.css';
 import { CreatePostPage } from './pages/CreatorPostPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 function App() {
   return (
@@ -30,6 +30,7 @@ function App() {
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/create-post" element={<CreatePostPage />} />
             <Route path="/post/:postId" element={<PostDetailPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </Layout>
         <Toaster />

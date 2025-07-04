@@ -7,6 +7,7 @@ export interface User {
   role: 'USER' | 'CREATOR' | 'ADMIN';
   bio?: string;
   profilePictureUrl?: string;
+  coverImageUrl?: string;
   createdAt: string;
   stats?: UserStats;
 }
