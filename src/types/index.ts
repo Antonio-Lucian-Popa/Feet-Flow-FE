@@ -8,6 +8,7 @@ export interface User {
   bio?: string;
   profilePictureUrl?: string;
   createdAt: string;
+  stats?: UserStats;
 }
 
 export interface UserStats {

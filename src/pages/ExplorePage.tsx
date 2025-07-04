@@ -26,13 +26,13 @@ export const ExplorePage: React.FC = () => {
     try {
       const response = await userService.getCreators();
       setCreators(response.content);
-      
+
       // Check subscription status for each creator
-      const subscriptionChecks = response.content.map(creator => 
+      const subscriptionChecks = response.content.map(creator =>
         subscriptionService.checkSubscription(creator.id)
       );
       const subscriptionStatuses = await Promise.all(subscriptionChecks);
-      
+
       const subscribedSet = new Set<string>();
       response.content.forEach((creator, index) => {
         if (subscriptionStatuses[index]) {
@@ -56,7 +56,7 @@ export const ExplorePage: React.FC = () => {
     try {
       setLoading(true);
       const response = await userService.searchUsers(searchQuery);
-      setCreators(response.content.filter(user => user.role === 'creator'));
+      setCreators(response.content.filter(user => user.role === 'CREATOR'));
     } catch (error) {
       console.error('Failed to search creators:', error);
     } finally {
@@ -114,7 +114,7 @@ export const ExplorePage: React.FC = () => {
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-white">Explore Creators</h1>
         <p className="text-gray-400 text-lg">Discover amazing content creators and their premium content</p>
-        
+
         {/* Search */}
         <div className="max-w-md mx-auto flex space-x-2">
           <div className="relative flex-1">
@@ -168,11 +168,11 @@ export const ExplorePage: React.FC = () => {
                   <div className="flex items-center justify-between text-sm text-gray-400">
                     <span className="flex items-center">
                       <Users className="h-4 w-4 mr-1" />
-                      1.2K followers
+                      {creator.stats?.followersCount.toLocaleString() ?? 0} followers
                     </span>
                     <span className="flex items-center">
                       <Heart className="h-4 w-4 mr-1" />
-                      4.8K likes
+                      {creator.stats?.likesCount.toLocaleString() ?? 0} likes
                     </span>
                   </div>
                   <div className="flex space-x-2">
@@ -185,13 +185,13 @@ export const ExplorePage: React.FC = () => {
                       View Profile
                     </Button>
                     <Button
-                      onClick={() => subscribedCreators.has(creator.id) 
-                        ? handleUnsubscribe(creator.id) 
+                      onClick={() => subscribedCreators.has(creator.id)
+                        ? handleUnsubscribe(creator.id)
                         : handleSubscribe(creator.id)
                       }
                       size="sm"
-                      className={subscribedCreators.has(creator.id) 
-                        ? 'bg-gray-600 hover:bg-gray-700' 
+                      className={subscribedCreators.has(creator.id)
+                        ? 'bg-gray-600 hover:bg-gray-700'
                         : 'bg-red-600 hover:bg-red-700'
                       }
                     >
@@ -242,17 +242,17 @@ export const ExplorePage: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <p className="text-gray-400 text-sm mb-3 line-clamp-2">
                     {creator.bio || 'Premium content creator'}
                   </p>
-                  
+
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-                    <span>892 followers</span>
-                    <span>3.2K likes</span>
-                    <span>$9.99/month</span>
+                    <span>{creator.stats?.followersCount.toLocaleString() ?? 0} followers</span>
+                    <span>{creator.stats?.likesCount.toLocaleString() ?? 0} likes</span>
+                    <span>{creator.stats?.subscribersCount ?? 0} subs</span> {/* sau $9.99/month dacă vrei monetizare */}
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => navigate(`/profile/${creator.id}`)}
@@ -263,13 +263,13 @@ export const ExplorePage: React.FC = () => {
                       View
                     </Button>
                     <Button
-                      onClick={() => subscribedCreators.has(creator.id) 
-                        ? handleUnsubscribe(creator.id) 
+                      onClick={() => subscribedCreators.has(creator.id)
+                        ? handleUnsubscribe(creator.id)
                         : handleSubscribe(creator.id)
                       }
                       size="sm"
-                      className={subscribedCreators.has(creator.id) 
-                        ? 'bg-gray-600 hover:bg-gray-700' 
+                      className={subscribedCreators.has(creator.id)
+                        ? 'bg-gray-600 hover:bg-gray-700'
                         : 'bg-red-600 hover:bg-red-700'
                       }
                     >
@@ -309,11 +309,11 @@ export const ExplorePage: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <p className="text-gray-400 text-sm mb-3 line-clamp-2">
                     {creator.bio || 'Trending creator with amazing content'}
                   </p>
-                  
+
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => navigate(`/profile/${creator.id}`)}
@@ -324,13 +324,13 @@ export const ExplorePage: React.FC = () => {
                       View
                     </Button>
                     <Button
-                      onClick={() => subscribedCreators.has(creator.id) 
-                        ? handleUnsubscribe(creator.id) 
+                      onClick={() => subscribedCreators.has(creator.id)
+                        ? handleUnsubscribe(creator.id)
                         : handleSubscribe(creator.id)
                       }
                       size="sm"
-                      className={subscribedCreators.has(creator.id) 
-                        ? 'bg-gray-600 hover:bg-gray-700' 
+                      className={subscribedCreators.has(creator.id)
+                        ? 'bg-gray-600 hover:bg-gray-700'
                         : 'bg-red-600 hover:bg-red-700'
                       }
                     >
@@ -364,11 +364,11 @@ export const ExplorePage: React.FC = () => {
                       </Badge>
                     </div>
                   </div>
-                  
+
                   <p className="text-gray-400 text-sm mb-3 line-clamp-2">
                     {creator.bio || 'New to the platform, welcome them!'}
                   </p>
-                  
+
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => navigate(`/profile/${creator.id}`)}
@@ -379,13 +379,13 @@ export const ExplorePage: React.FC = () => {
                       View
                     </Button>
                     <Button
-                      onClick={() => subscribedCreators.has(creator.id) 
-                        ? handleUnsubscribe(creator.id) 
+                      onClick={() => subscribedCreators.has(creator.id)
+                        ? handleUnsubscribe(creator.id)
                         : handleSubscribe(creator.id)
                       }
                       size="sm"
-                      className={subscribedCreators.has(creator.id) 
-                        ? 'bg-gray-600 hover:bg-gray-700' 
+                      className={subscribedCreators.has(creator.id)
+                        ? 'bg-gray-600 hover:bg-gray-700'
                         : 'bg-red-600 hover:bg-red-700'
                       }
                     >
