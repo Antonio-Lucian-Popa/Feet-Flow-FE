@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import { User, ApiResponse, PaginatedResponse } from '../types';
+import { User, ApiResponse, PaginatedResponse, UserStats } from '../types';
 
 class UserService {
   async getUser(id: string): Promise<User> {
@@ -67,6 +67,69 @@ class UserService {
     }
     
     throw new Error(response.message || 'Failed to search users');
+  }
+
+  async getUserStats(id: string): Promise<UserStats> {
+    const response = await apiClient.get<ApiResponse<UserStats>>(`/users/${id}/stats`);
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to get user stats');
+  }
+
+   // Follow/Unfollow functionality
+  async followUser(userId: string): Promise<void> {
+    const response = await apiClient.post<ApiResponse<void>>(`/users/${userId}/follow`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to follow user');
+    }
+  }
+
+  async unfollowUser(userId: string): Promise<void> {
+    const response = await apiClient.delete<ApiResponse<void>>(`/users/${userId}/follow`);
+    
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to unfollow user');
+    }
+  }
+
+  async checkFollowStatus(userId: string): Promise<boolean> {
+    try {
+      const response = await apiClient.get<ApiResponse<{ isFollowing: boolean }>>(
+        `/users/${userId}/follow/status`
+      );
+      return response.success && response.data?.isFollowing === true;
+    } catch (error) {
+      console.error('Failed to check follow status:', error);
+      return false;
+    }
+  }
+
+  async getFollowers(userId: string, page = 0, size = 20): Promise<PaginatedResponse<User>> {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<User>>>(
+      `/users/${userId}/followers?page=${page}&size=${size}`
+    );
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to get followers');
+  }
+
+  async getFollowing(userId: string, page = 0, size = 20): Promise<PaginatedResponse<User>> {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<User>>>(
+      `/users/${userId}/following?page=${page}&size=${size}`
+    );
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to get following');
   }
 }
 

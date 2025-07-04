@@ -10,6 +10,14 @@ export interface User {
   createdAt: string;
 }
 
+export interface UserStats {
+  followersCount: number;
+  followingCount: number;
+  likesCount: number;
+  postsCount: number;
+  subscribersCount: number;
+}
+
 export interface Post {
   id: number;
   creatorId: string;
