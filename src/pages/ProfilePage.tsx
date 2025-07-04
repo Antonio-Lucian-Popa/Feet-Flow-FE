@@ -11,6 +11,7 @@ import { User, Post } from '@/types';
 import { userService } from '@/services/userService';
 import { postService } from '@/services/postService';
 import { subscriptionService } from '@/services/subscriptionService';
+import { useToast } from '@/hooks/use-toast';
 import { Heart, Users, Calendar, Settings, MessageCircle, Share } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -18,6 +19,7 @@ export const ProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -25,6 +27,7 @@ export const ProfilePage: React.FC = () => {
   const [postsLoading, setPostsLoading] = useState(true);
 
   const isOwnProfile = currentUser?.id === userId;
+  console.log('Current User ID:', currentUser?.id);
 
   useEffect(() => {
     if (userId) {
@@ -78,9 +81,18 @@ export const ProfilePage: React.FC = () => {
       if (userId) {
         await subscriptionService.subscribe(userId);
         setIsSubscribed(true);
+        toast({
+          title: 'Subscribed!',
+          description: `You are now subscribed to ${profileUser?.firstName} ${profileUser?.lastName}`,
+        });
       }
     } catch (error) {
       console.error('Failed to subscribe:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to subscribe',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -89,9 +101,18 @@ export const ProfilePage: React.FC = () => {
       if (userId) {
         await subscriptionService.unsubscribe(userId);
         setIsSubscribed(false);
+        toast({
+          title: 'Unsubscribed',
+          description: `You have unsubscribed from ${profileUser?.firstName} ${profileUser?.lastName}`,
+        });
       }
     } catch (error) {
       console.error('Failed to unsubscribe:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to unsubscribe',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -141,7 +162,7 @@ export const ProfilePage: React.FC = () => {
                   <h1 className="text-2xl font-bold text-white">
                     {profileUser.firstName} {profileUser.lastName}
                   </h1>
-                  {profileUser.role === 'creator' && (
+                  {profileUser.role === 'CREATOR' && (
                     <Badge className="bg-red-600 text-white">Creator</Badge>
                   )}
                 </div>
@@ -182,7 +203,7 @@ export const ProfilePage: React.FC = () => {
                 </Button>
               ) : (
                 <>
-                  {profileUser.role === 'creator' && (
+                  {profileUser.role === 'CREATOR' && (
                     <Button
                       onClick={isSubscribed ? handleUnsubscribe : handleSubscribe}
                       className={isSubscribed ? 'bg-gray-600 hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700'}
@@ -211,7 +232,7 @@ export const ProfilePage: React.FC = () => {
           <TabsTrigger value="posts" className="data-[state=active]:bg-red-600">
             Posts ({posts.length})
           </TabsTrigger>
-          {profileUser.role === 'creator' && (
+          {profileUser.role === 'CREATOR' && (
             <TabsTrigger value="about" className="data-[state=active]:bg-red-600">
               About
             </TabsTrigger>
@@ -248,7 +269,7 @@ export const ProfilePage: React.FC = () => {
           )}
         </TabsContent>
 
-        {profileUser.role === 'creator' && (
+        {profileUser.role === 'CREATOR' && (
           <TabsContent value="about" className="mt-6">
             <Card className="bg-gray-900 border-gray-800">
               <CardContent className="p-6">
@@ -263,6 +284,14 @@ export const ProfilePage: React.FC = () => {
                     <div>
                       <p className="text-sm text-gray-400">Content type</p>
                       <p className="font-medium">Premium foot content</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400">Subscription price</p>
+                      <p className="font-medium">$9.99/month</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400">Total posts</p>
+                      <p className="font-medium">{posts.length}</p>
                     </div>
                   </div>
                 </div>

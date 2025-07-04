@@ -48,11 +48,14 @@ class SubscriptionService {
 
   async checkSubscription(creatorId: string): Promise<boolean> {
     try {
-      const response = await apiClient.get<ApiResponse<Subscription>>(
+      const response = await apiClient.get<ApiResponse<{ id: string | null; endDate: string | null; active: boolean }>>(
         `/subscriptions/check/${creatorId}`
       );
-      return response.success && !!response.data;
+      
+      // FIXED: Check both success and active status
+      return response.success && response.data?.active === true;
     } catch (error) {
+      console.error('Failed to check subscription:', error);
       return false;
     }
   }

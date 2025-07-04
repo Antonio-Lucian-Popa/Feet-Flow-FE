@@ -2,7 +2,7 @@ import { apiClient } from './api';
 import { Comment, ApiResponse, PaginatedResponse } from '../types';
 
 class CommentService {
-  async getPostComments(postId: number, page = 0, size = 20): Promise<PaginatedResponse<Comment>> {
+  async getPostComments(postId: string, page = 0, size = 20): Promise<PaginatedResponse<Comment>> {
     const response = await apiClient.get<ApiResponse<PaginatedResponse<Comment>>>(
       `/comments/post/${postId}?page=${page}&size=${size}`
     );
@@ -14,7 +14,7 @@ class CommentService {
     throw new Error(response.message || 'Failed to get comments');
   }
 
-  async createComment(postId: number, content: string): Promise<Comment> {
+  async createComment(postId: string, content: string): Promise<Comment> {
     const response = await apiClient.post<ApiResponse<Comment>>('/comments', {
       postId,
       content,
@@ -27,7 +27,7 @@ class CommentService {
     throw new Error(response.message || 'Failed to create comment');
   }
 
-  async updateComment(id: number, content: string): Promise<Comment> {
+  async updateComment(id: string, content: string): Promise<Comment> {
     const response = await apiClient.put<ApiResponse<Comment>>(`/comments/${id}`, {
       content,
     });
@@ -39,7 +39,7 @@ class CommentService {
     throw new Error(response.message || 'Failed to update comment');
   }
 
-  async deleteComment(id: number): Promise<void> {
+  async deleteComment(id: string): Promise<void> {
     const response = await apiClient.delete<ApiResponse<void>>(`/comments/${id}`);
     
     if (!response.success) {

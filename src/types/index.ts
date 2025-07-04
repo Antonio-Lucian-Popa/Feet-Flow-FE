@@ -4,7 +4,7 @@ export interface User {
   lastName: string;
   keycloakId: string;
   email: string;
-  role: 'user' | 'creator' | 'admin';
+  role: 'USER' | 'CREATOR' | 'ADMIN';
   bio?: string;
   profilePictureUrl?: string;
   createdAt: string;

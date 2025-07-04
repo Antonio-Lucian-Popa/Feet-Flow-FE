@@ -142,7 +142,11 @@ class ApiClient {
 
   // Special method for file uploads
   async uploadFiles<T>(url: string, formData: FormData): Promise<T> {
-    const response: AxiosResponse<T> = await this.client.post(url, formData);
+    const response: AxiosResponse<T> = await this.client.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   }
 }

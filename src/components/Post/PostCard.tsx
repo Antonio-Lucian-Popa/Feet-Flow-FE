@@ -46,6 +46,7 @@ export const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
+  // FIXED: Correct logic for blurring premium content
   const shouldBlurContent = !post.isPublic && !isSubscribed;
 
   return (
@@ -93,25 +94,33 @@ export const PostCard: React.FC<PostCardProps> = ({
                   src={post.media[currentMediaIndex].mediaUrl}
                   className="w-full h-full object-cover"
                   controls={!shouldBlurContent}
+                  poster={post.media[currentMediaIndex].thumbnailUrl}
                 />
               )}
             </div>
 
             {/* Premium Content Overlay */}
             {shouldBlurContent && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                <div className="text-center">
-                  <Lock className="h-12 w-12 text-white mb-4 mx-auto" />
-                  <p className="text-white text-lg font-semibold mb-2">Premium Content</p>
-                  <p className="text-gray-300 text-sm mb-4">Subscribe to unlock this content</p>
-                  <Button className="bg-red-600 hover:bg-red-700">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <div className="text-center p-6">
+                  <Lock className="h-16 w-16 text-white mb-4 mx-auto" />
+                  <p className="text-white text-xl font-semibold mb-2">Premium Content</p>
+                  <p className="text-gray-300 text-sm mb-4">Subscribe to unlock this exclusive content</p>
+                  <Button 
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Navigate to subscription or creator profile
+                      navigate(`/profile/${post.creator?.id}`);
+                    }}
+                  >
                     Subscribe Now
                   </Button>
                 </div>
               </div>
             )}
 
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Only show if content is not blurred */}
             {post.media.length > 1 && !shouldBlurContent && (
               <>
                 <Button
@@ -139,7 +148,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                   <ChevronRight className="h-4 w-4" />
                 </Button>
 
-                {/* Dots Indicator */}
+                {/* Media Counter */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                   {post.media.map((_, index) => (
                     <button
@@ -165,7 +174,18 @@ export const PostCard: React.FC<PostCardProps> = ({
             <h3 className="text-white font-semibold text-lg mb-2">{post.title}</h3>
           )}
           {post.description && (
-            <p className="text-gray-300 text-sm leading-relaxed line-clamp-3">{post.description}</p>
+            <p className={`text-gray-300 text-sm leading-relaxed line-clamp-3 ${
+              shouldBlurContent ? 'blur-sm' : ''
+            }`}>
+              {post.description}
+            </p>
+          )}
+          {shouldBlurContent && (
+            <div className="mt-2">
+              <p className="text-gray-500 text-xs italic">
+                Subscribe to read the full description
+              </p>
+            </div>
           )}
         </div>
       </CardContent>
@@ -180,24 +200,27 @@ export const PostCard: React.FC<PostCardProps> = ({
               className={`text-gray-400 hover:text-red-500 ${
                 isLiked ? 'text-red-500' : ''
               }`}
+              disabled={shouldBlurContent}
             >
               <Heart className={`h-5 w-5 mr-1 ${isLiked ? 'fill-current' : ''}`} />
-              <span>{post.voteCount || 0}</span>
+              <span>{shouldBlurContent ? '?' : (post.voteCount || 0)}</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onComment?.(post.id)}
               className="text-gray-400 hover:text-white"
+              disabled={shouldBlurContent}
             >
               <MessageCircle className="h-5 w-5 mr-1" />
-              <span>{post.comments?.length || 0}</span>
+              <span>{shouldBlurContent ? '?' : (post.comments?.length || 0)}</span>
             </Button>
           </div>
           <Button
             variant="ghost"
             size="sm"
             className="text-gray-400 hover:text-white"
+            disabled={shouldBlurContent}
           >
             <Share className="h-5 w-5" />
           </Button>

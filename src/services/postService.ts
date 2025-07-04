@@ -14,7 +14,7 @@ class PostService {
     throw new Error(response.message || 'Failed to get posts');
   }
 
-  async getPost(id: number): Promise<Post> {
+  async getPost(id: string): Promise<Post> {
     const response = await apiClient.get<ApiResponse<Post>>(`/posts/${id}`);
     
     if (response.success && response.data) {

@@ -2,7 +2,7 @@ import { apiClient } from './api';
 import { Vote, ApiResponse } from '../types';
 
 class VoteService {
-  async votePost(postId: number, value: 1 | -1): Promise<Vote> {
+  async votePost(postId: string, value: 1 | -1): Promise<Vote> {
     const response = await apiClient.post<ApiResponse<Vote>>('/votes', {
       postId,
       value,
@@ -15,7 +15,7 @@ class VoteService {
     throw new Error(response.message || 'Failed to vote on post');
   }
 
-  async removeVote(postId: number): Promise<void> {
+  async removeVote(postId: string): Promise<void> {
     const response = await apiClient.delete<ApiResponse<void>>(`/votes/post/${postId}`);
     
     if (!response.success) {
@@ -23,7 +23,7 @@ class VoteService {
     }
   }
 
-  async getPostVotes(postId: number): Promise<{ upvotes: number; downvotes: number }> {
+  async getPostVotes(postId: string): Promise<{ upvotes: number; downvotes: number }> {
     const response = await apiClient.get<ApiResponse<{ upvotes: number; downvotes: number }>>(
       `/votes/post/${postId}/count`
     );
