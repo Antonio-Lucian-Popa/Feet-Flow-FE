@@ -180,11 +180,11 @@ export const ExplorePage: React.FC = () => {
                       onClick={() => navigate(`/profile/${creator.id}`)}
                       variant="outline"
                       size="sm"
-                      className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+                      className="flex-1 border-gray-600 text-black hover:bg-gray-700 hover:text-white"
                     >
                       View Profile
                     </Button>
-                    <Button
+                    {/* <Button
                       onClick={() => subscribedCreators.has(creator.id)
                         ? handleUnsubscribe(creator.id)
                         : handleSubscribe(creator.id)
@@ -196,7 +196,7 @@ export const ExplorePage: React.FC = () => {
                       }
                     >
                       {subscribedCreators.has(creator.id) ? 'Subscribed' : 'Subscribe'}
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardContent>
               </Card>
@@ -258,11 +258,11 @@ export const ExplorePage: React.FC = () => {
                       onClick={() => navigate(`/profile/${creator.id}`)}
                       variant="outline"
                       size="sm"
-                      className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+                      className="flex-1 border-gray-600 text-black hover:bg-gray-700 hover:text-white"
                     >
                       View
                     </Button>
-                    <Button
+                    {/* <Button
                       onClick={() => subscribedCreators.has(creator.id)
                         ? handleUnsubscribe(creator.id)
                         : handleSubscribe(creator.id)
@@ -274,7 +274,7 @@ export const ExplorePage: React.FC = () => {
                       }
                     >
                       {subscribedCreators.has(creator.id) ? 'Subscribed' : 'Subscribe'}
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardContent>
               </Card>
