@@ -168,9 +168,9 @@ export const SettingsPage: React.FC = () => {
 
       // Reset file states
       setProfilePictureFile(null);
-      setProfilePicturePreview(null);
+     // setProfilePicturePreview(null);
       setCoverImageFile(null);
-      setCoverImagePreview(null);
+     // setCoverImagePreview(null);
 
     } catch (error: any) {
       toast({

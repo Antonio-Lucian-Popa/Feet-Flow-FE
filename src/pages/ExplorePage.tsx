@@ -144,11 +144,17 @@ export const ExplorePage: React.FC = () => {
             {featuredCreators.map((creator) => (
               <Card key={creator.id} className="bg-gray-900 border-gray-800 overflow-hidden">
                 <div className="relative">
-                  <div className="h-48 bg-gradient-to-br from-red-500 to-pink-600"></div>
+                  {creator.coverImageUrl ? (
+                    <img src={creator.coverImageUrl} alt="Cover" className="h-48 w-full object-cover" />
+                  ) : (
+                    <div className="h-48 w-full bg-gradient-to-br from-red-500 to-pink-600"></div>
+                  )}
+
                   <Badge className="absolute top-4 left-4 bg-yellow-500 text-black">
                     <Star className="h-3 w-3 mr-1" />
                     Featured
                   </Badge>
+
                   <Avatar className="absolute bottom-4 left-4 w-16 h-16 border-4 border-gray-900">
                     <AvatarImage src={creator.profilePictureUrl} />
                     <AvatarFallback className="bg-gray-700 text-white">
@@ -156,6 +162,7 @@ export const ExplorePage: React.FC = () => {
                     </AvatarFallback>
                   </Avatar>
                 </div>
+
                 <CardContent className="p-4 space-y-3">
                   <div>
                     <h3 className="text-lg font-semibold text-white">
