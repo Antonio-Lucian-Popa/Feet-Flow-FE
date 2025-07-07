@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -28,8 +29,8 @@ import {
   Eye,
   MessageCircle
 } from 'lucide-react';
-
 export const CreatorDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -93,7 +94,7 @@ export const CreatorDashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">Creator Dashboard</h1>
           <p className="text-gray-400">Manage your content and track your performance</p>
         </div>
-        <Button className="bg-red-600 hover:bg-red-700">
+        <Button className="bg-red-600 hover:bg-red-700" onClick={() => navigate('/create-post')}>
           <Plus className="h-4 w-4 mr-2" />
           Create Post
         </Button>
