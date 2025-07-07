@@ -409,7 +409,7 @@ export const ProfilePage: React.FC = () => {
                 <PostCard
                   key={post.id}
                   post={post}
-                  isSubscribed={isOwnProfile || isSubscribed}
+                  isSubscribed={isOwnProfile || isSubscribed || post.isPublic}
                 />
               ))}
             </div>
