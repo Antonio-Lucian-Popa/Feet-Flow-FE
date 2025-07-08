@@ -69,7 +69,7 @@ export interface Comment {
   postId: number;
   content: string;
   createdAt: string;
-  user?: User;
+  author?: User;
 }
 
 export interface AuthTokens {

@@ -183,7 +183,7 @@ export const PostDetailPage: React.FC = () => {
   };
 
   // FIXED: Correct logic for blurring premium content
-  const shouldBlurContent = !post?.isPublic && !isSubscribed;
+  const shouldBlurContent = !post?.isPublic && !isSubscribed && post?.creator?.id !== user?.id;
 
   if (loading) {
     return (
@@ -455,22 +455,22 @@ export const PostDetailPage: React.FC = () => {
                   {comments.map((comment) => (
                     <div key={comment.id} className="flex space-x-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={comment.user?.profilePictureUrl} />
+                        <AvatarImage src={comment.author?.profilePictureUrl} />
                         <AvatarFallback className="bg-gray-700 text-white">
-                          {comment.user?.firstName?.charAt(0)}{comment.user?.lastName?.charAt(0)}
+                          {comment.author?.firstName?.charAt(0)}{comment.author?.lastName?.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
                         <div className="bg-gray-800 rounded-lg p-3">
                           <div className="flex items-center space-x-2 mb-1">
                             <p className="text-white font-medium text-sm">
-                              {comment.user?.firstName} {comment.user?.lastName}
+                              {comment.author?.firstName} {comment.author?.lastName}
                             </p>
                             <p className="text-gray-400 text-xs">
                               {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
                             </p>
                           </div>
-                          <p className="text-gray-300 text-sm">{comment.content}</p>
+                          <p className="text-gray-300 text-sm text-left">{comment.content}</p>
                         </div>
                       </div>
                     </div>
