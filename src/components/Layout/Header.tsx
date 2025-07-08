@@ -73,12 +73,12 @@ export const Header: React.FC = () => {
           {isAuthenticated ? (
             <>
               {/* Create Post Button - Show for creators */}
-              {user?.role === 'creator' && (
+              {user?.role === 'CREATOR' && (
                 <Button
                   onClick={() => navigate('/create-post')}
                   className="bg-red-600 hover:bg-red-700 text-white"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="h-4 w-4 md:mr-2" />
                   <span className="hidden sm:inline">Create</span>
                 </Button>
               )}
@@ -107,7 +107,7 @@ export const Header: React.FC = () => {
                     <User className="mr-2 h-4 w-4" />
                     Profile
                   </DropdownMenuItem>
-                  {user?.role === 'creator' && (
+                  {user?.role === 'CREATOR' && (
                     <DropdownMenuItem 
                       onClick={() => navigate('/dashboard')}
                       className="text-gray-300 hover:text-white hover:bg-gray-800"
