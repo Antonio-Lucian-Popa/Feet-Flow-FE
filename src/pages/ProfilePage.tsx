@@ -240,6 +240,17 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Profile Header */}
+      {profileUser.role === 'CREATOR' && profileUser.coverImageUrl && (
+        <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
+          <img
+            src={profileUser.coverImageUrl}
+            alt="Cover"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
+        </div>
+      )}
+
       <Card className="bg-gray-900 border-gray-800">
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
@@ -354,8 +365,8 @@ export const ProfilePage: React.FC = () => {
                       disabled={actionLoading}
                       className={isSubscribed ? 'bg-gray-600 hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700'}
                     >
-                      {isSubscribed ? 
-                        (actionLoading ? 'Unsubscribing...' : 'Unsubscribe') : 
+                      {isSubscribed ?
+                        (actionLoading ? 'Unsubscribing...' : 'Unsubscribe') :
                         (actionLoading ? 'Subscribing...' : 'Subscribe')
                       }
                     </Button>
