@@ -331,7 +331,7 @@ export const ProfilePage: React.FC = () => {
                 <Button
                   onClick={() => navigate('/settings')}
                   variant="outline"
-                  className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                  className="border-gray-600 text-black-300 hover:bg-gray-800 hover:text-white"
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   Edit Profile
