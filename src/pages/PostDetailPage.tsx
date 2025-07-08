@@ -183,7 +183,8 @@ export const PostDetailPage: React.FC = () => {
   };
 
   // FIXED: Correct logic for blurring premium content
-  const shouldBlurContent = !post?.isPublic && !isSubscribed && post?.creator?.id !== user?.id;
+  console.log("Post Detail Page - Post Data:", post);
+  const shouldBlurContent = !post?.public && !isSubscribed && post?.creator?.id !== user?.id;
 
   if (loading) {
     return (
@@ -244,7 +245,7 @@ export const PostDetailPage: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {!post.isPublic && (
+              {!post.public && (
                 <Badge variant="secondary" className="bg-red-600 text-white">
                   <Lock className="h-3 w-3 mr-1" />
                   Premium

@@ -25,7 +25,7 @@ export interface Post {
   creatorId: string;
   title?: string;
   description?: string;
-  isPublic: boolean;
+  public: boolean;
   createdAt: string;
   creator?: User;
   media?: PostMedia[];
